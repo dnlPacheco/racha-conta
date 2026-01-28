@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Always write all documentation in English
 - When developing frontend code, always use the frontend subagent (`.claude/agents/frontend.md`) to follow established code patterns and conventions
+- **Always update documentation**: When implementing new features, adding dependencies, or changing project structure, update both `CLAUDE.md` and relevant subagent files (`.claude/agents/*.md`) to reflect the changes
 
 ## Project Overview
 
@@ -19,6 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui (Radix UI primitives)
+- **Internationalization**: react-i18next (i18next)
 
 ## Development Setup
 
@@ -49,6 +51,9 @@ src/
 ├── components/
 │   └── ui/           # shadcn/ui components
 ├── hooks/            # Custom React hooks
+├── i18n/             # Internationalization
+│   ├── index.ts      # i18n configuration
+│   └── locales/      # Translation files (en, pt-BR, es)
 ├── lib/              # Utility functions
 ├── types/            # TypeScript type definitions
 ├── pages/            # Page components
@@ -238,6 +243,7 @@ Values are rounded to 2 decimal places. Cent differences are absorbed by the ori
 - [ ] Notifications
 - [ ] Multiple currencies
 - [ ] Group sharing via link
+- [x] Internationalization (i18n) - Supports English, Portuguese (BR), and Spanish
 
 ---
 

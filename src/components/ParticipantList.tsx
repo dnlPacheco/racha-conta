@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Trash2, UserCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +17,20 @@ import {
 } from '@/components/ui/alert-dialog'
 import type { Participant } from '@/types'
 
+function useStrings() {
+  const { t } = useTranslation()
+
+  return {
+    title: t('participant.title'),
+    addPlaceholder: t('participant.addPlaceholder'),
+    empty: t('participant.empty'),
+    removeTitle: t('participant.removeTitle'),
+    cancel: t('common.buttons.cancel'),
+    remove: t('common.buttons.remove'),
+    removeDescription: (name: string) => t('participant.removeDescription', { name }),
+  }
+}
+
 interface ParticipantListProps {
   participants: Participant[]
   onAdd: (name: string) => void
@@ -23,6 +38,7 @@ interface ParticipantListProps {
 }
 
 export function ParticipantList({ participants, onAdd, onRemove }: ParticipantListProps) {
+  const Strings = useStrings()
   const [newName, setNewName] = useState('')
 
   const handleAdd = () => {
@@ -34,14 +50,14 @@ export function ParticipantList({ participants, onAdd, onRemove }: ParticipantLi
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Participants</CardTitle>
+        <CardTitle className="text-lg">{Strings.title}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex gap-2 mb-4">
           <Input
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            placeholder="Add participant..."
+            placeholder={Strings.addPlaceholder}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleAdd()
             }}
@@ -53,7 +69,7 @@ export function ParticipantList({ participants, onAdd, onRemove }: ParticipantLi
 
         {participants.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No participants yet. Add someone to get started.
+            {Strings.empty}
           </p>
         ) : (
           <ul className="space-y-2">
@@ -74,19 +90,18 @@ export function ParticipantList({ participants, onAdd, onRemove }: ParticipantLi
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Remove participant?</AlertDialogTitle>
+                      <AlertDialogTitle>{Strings.removeTitle}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will remove {participant.name} and all their associated expenses.
-                        This action cannot be undone.
+                        {Strings.removeDescription(participant.name)}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel>{Strings.cancel}</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => onRemove(participant.id)}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
-                        Remove
+                        {Strings.remove}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

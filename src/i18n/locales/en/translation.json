@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "Racha Conta",
+    "tagline": "Split expenses with your friends"
+  },
+  "common": {
+    "buttons": {
+      "create": "Create",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "remove": "Remove",
+      "save": "Save Changes",
+      "add": "Add",
+      "back": "Back",
+      "all": "All",
+      "none": "None"
+    },
+    "labels": {
+      "unknown": "Unknown"
+    }
+  },
+  "home": {
+    "yourGroups": "Your Groups",
+    "newGroup": "New Group",
+    "createNewGroup": "Create New Group",
+    "groupNameDescription": "Enter a name for your expense-sharing group.",
+    "groupName": "Group Name",
+    "groupNamePlaceholder": "e.g., Weekend Trip",
+    "noGroups": "You don't have any groups yet.",
+    "createFirstGroup": "Create your first group",
+    "created": "Created {{date}}",
+    "participants_one": "{{count}} participant",
+    "participants_other": "{{count}} participants"
+  },
+  "group": {
+    "notFound": "Group not found",
+    "backToHome": "Back to Home",
+    "deleteGroup": "Delete Group",
+    "deleteGroupTitle": "Delete group?",
+    "deleteGroupDescription": "This will permanently delete \"{{name}}\" and all its data. This action cannot be undone.",
+    "stats": "{{participants}} participants \u2022 {{expenses}} expenses",
+    "addExpense": "Add Expense"
+  },
+  "participant": {
+    "title": "Participants",
+    "addPlaceholder": "Add participant...",
+    "empty": "No participants yet. Add someone to get started.",
+    "removeTitle": "Remove participant?",
+    "removeDescription": "This will remove {{name}} and all their associated expenses. This action cannot be undone."
+  },
+  "expense": {
+    "title": "Expenses",
+    "empty": "No expenses yet. Add one to start tracking.",
+    "addTitle": "Add Expense",
+    "editTitle": "Edit Expense",
+    "addDescription": "Enter the details of the expense.",
+    "editDescription": "Update the expense details.",
+    "description": "Description",
+    "descriptionPlaceholder": "e.g., Dinner at restaurant",
+    "amount": "Amount",
+    "paidBy": "Paid by",
+    "selectWhoPaid": "Select who paid",
+    "date": "Date",
+    "splitBetween": "Split between",
+    "addButton": "Add Expense",
+    "saveButton": "Save Changes",
+    "deleteTitle": "Delete expense?",
+    "deleteDescription": "This will permanently delete \"{{name}}\". This action cannot be undone.",
+    "paidByInfo": "Paid by {{name}} \u2022 {{date}}"
+  },
+  "balance": {
+    "title": "Balance",
+    "emptyParticipants": "Add participants to see the balance.",
+    "totalExpenses": "Total Expenses",
+    "individualBalances": "Individual Balances",
+    "settleUp": "Settle Up",
+    "addExpensesToSee": "Add expenses to see who owes whom.",
+    "allSettled": "All settled! No transfers needed."
+  }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,6 +21,29 @@ import {
 } from '@/components/ui/select'
 import type { Expense, Participant } from '@/types'
 
+function useStrings() {
+  const { t } = useTranslation()
+
+  return {
+    addTitle: t('expense.addTitle'),
+    editTitle: t('expense.editTitle'),
+    addDescription: t('expense.addDescription'),
+    editDescription: t('expense.editDescription'),
+    description: t('expense.description'),
+    descriptionPlaceholder: t('expense.descriptionPlaceholder'),
+    amount: t('expense.amount'),
+    paidBy: t('expense.paidBy'),
+    selectWhoPaid: t('expense.selectWhoPaid'),
+    date: t('expense.date'),
+    splitBetween: t('expense.splitBetween'),
+    all: t('common.buttons.all'),
+    none: t('common.buttons.none'),
+    cancel: t('common.buttons.cancel'),
+    addButton: t('expense.addButton'),
+    saveButton: t('expense.saveButton'),
+  }
+}
+
 interface ExpenseFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -35,6 +59,7 @@ export function ExpenseForm({
   expense,
   onSave,
 }: ExpenseFormProps) {
+  const Strings = useStrings()
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [payerId, setPayerId] = useState('')
@@ -103,27 +128,25 @@ export function ExpenseForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit Expense' : 'Add Expense'}</DialogTitle>
+          <DialogTitle>{isEditing ? Strings.editTitle : Strings.addTitle}</DialogTitle>
           <DialogDescription>
-            {isEditing
-              ? 'Update the expense details.'
-              : 'Enter the details of the expense.'}
+            {isEditing ? Strings.editDescription : Strings.addDescription}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{Strings.description}</Label>
             <Input
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., Dinner at restaurant"
+              placeholder={Strings.descriptionPlaceholder}
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="amount">Amount (R$)</Label>
+            <Label htmlFor="amount">{Strings.amount}</Label>
             <Input
               id="amount"
               type="number"
@@ -136,10 +159,10 @@ export function ExpenseForm({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="payer">Paid by</Label>
+            <Label htmlFor="payer">{Strings.paidBy}</Label>
             <Select value={payerId} onValueChange={setPayerId}>
               <SelectTrigger>
-                <SelectValue placeholder="Select who paid" />
+                <SelectValue placeholder={Strings.selectWhoPaid} />
               </SelectTrigger>
               <SelectContent>
                 {participants.map((p) => (
@@ -152,7 +175,7 @@ export function ExpenseForm({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="date">Date</Label>
+            <Label htmlFor="date">{Strings.date}</Label>
             <Input
               id="date"
               type="date"
@@ -163,7 +186,7 @@ export function ExpenseForm({
 
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
-              <Label>Split between</Label>
+              <Label>{Strings.splitBetween}</Label>
               <div className="flex gap-2">
                 <Button
                   type="button"
@@ -172,7 +195,7 @@ export function ExpenseForm({
                   onClick={selectAll}
                   className="h-auto py-1 px-2 text-xs"
                 >
-                  All
+                  {Strings.all}
                 </Button>
                 <Button
                   type="button"
@@ -181,7 +204,7 @@ export function ExpenseForm({
                   onClick={selectNone}
                   className="h-auto py-1 px-2 text-xs"
                 >
-                  None
+                  {Strings.none}
                 </Button>
               </div>
             </div>
@@ -207,10 +230,10 @@ export function ExpenseForm({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {Strings.cancel}
           </Button>
           <Button onClick={handleSubmit} disabled={!isValid}>
-            {isEditing ? 'Save Changes' : 'Add Expense'}
+            {isEditing ? Strings.saveButton : Strings.addButton}
           </Button>
         </DialogFooter>
       </DialogContent>

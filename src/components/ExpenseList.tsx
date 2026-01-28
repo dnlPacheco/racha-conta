@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,6 +17,21 @@ import {
 import { formatCurrency, formatDate } from '@/lib/format'
 import type { Expense, Participant } from '@/types'
 
+function useStrings() {
+  const { t } = useTranslation()
+
+  return {
+    title: t('expense.title'),
+    empty: t('expense.empty'),
+    deleteTitle: t('expense.deleteTitle'),
+    cancel: t('common.buttons.cancel'),
+    delete: t('common.buttons.delete'),
+    unknown: t('common.labels.unknown'),
+    paidByInfo: (name: string, date: string) => t('expense.paidByInfo', { name, date }),
+    deleteDescription: (name: string) => t('expense.deleteDescription', { name }),
+  }
+}
+
 interface ExpenseListProps {
   expenses: Expense[]
   participants: Participant[]
@@ -24,8 +40,10 @@ interface ExpenseListProps {
 }
 
 export function ExpenseList({ expenses, participants, onEdit, onDelete }: ExpenseListProps) {
+  const Strings = useStrings()
+
   const getParticipantName = (id: string) => {
-    return participants.find((p) => p.id === id)?.name || 'Unknown'
+    return participants.find((p) => p.id === id)?.name || Strings.unknown
   }
 
   const sortedExpenses = [...expenses].sort(
@@ -35,25 +53,25 @@ export function ExpenseList({ expenses, participants, onEdit, onDelete }: Expens
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Expenses</CardTitle>
+        <CardTitle className="text-lg">{Strings.title}</CardTitle>
       </CardHeader>
       <CardContent>
         {expenses.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No expenses yet. Add one to start tracking.
+            {Strings.empty}
           </p>
         ) : (
           <ul className="space-y-3">
             {sortedExpenses.map((expense) => (
-              <li
-                key={expense.id}
-                className="border rounded-lg p-4"
-              >
+              <li key={expense.id} className="border rounded-lg p-4">
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h4 className="font-medium">{expense.description}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Paid by {getParticipantName(expense.payerId)} • {formatDate(expense.date)}
+                      {Strings.paidByInfo(
+                        getParticipantName(expense.payerId),
+                        formatDate(expense.date)
+                      )}
                     </p>
                   </div>
                   <span className="text-lg font-semibold">
@@ -86,19 +104,18 @@ export function ExpenseList({ expenses, participants, onEdit, onDelete }: Expens
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Delete expense?</AlertDialogTitle>
+                          <AlertDialogTitle>{Strings.deleteTitle}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This will permanently delete "{expense.description}".
-                            This action cannot be undone.
+                            {Strings.deleteDescription(expense.description)}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>{Strings.cancel}</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => onDelete(expense.id)}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                           >
-                            Delete
+                            {Strings.delete}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>

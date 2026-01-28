@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "Racha Conta",
+    "tagline": "Divida despesas com seus amigos"
+  },
+  "common": {
+    "buttons": {
+      "create": "Criar",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "remove": "Remover",
+      "save": "Salvar alterações",
+      "add": "Adicionar",
+      "back": "Voltar",
+      "all": "Todos",
+      "none": "Nenhum"
+    },
+    "labels": {
+      "unknown": "Desconhecido"
+    }
+  },
+  "home": {
+    "yourGroups": "Seus Grupos",
+    "newGroup": "Novo Grupo",
+    "createNewGroup": "Criar Novo Grupo",
+    "groupNameDescription": "Digite um nome para o grupo de despesas.",
+    "groupName": "Nome do Grupo",
+    "groupNamePlaceholder": "ex: Viagem de fim de semana",
+    "noGroups": "Você ainda não tem grupos.",
+    "createFirstGroup": "Criar seu primeiro grupo",
+    "created": "Criado em {{date}}",
+    "participants_one": "{{count}} participante",
+    "participants_other": "{{count}} participantes"
+  },
+  "group": {
+    "notFound": "Grupo não encontrado",
+    "backToHome": "Voltar para Início",
+    "deleteGroup": "Excluir Grupo",
+    "deleteGroupTitle": "Excluir grupo?",
+    "deleteGroupDescription": "Isso excluirá permanentemente \"{{name}}\" e todos os seus dados. Esta ação não pode ser desfeita.",
+    "stats": "{{participants}} participantes \u2022 {{expenses}} despesas",
+    "addExpense": "Adicionar Despesa"
+  },
+  "participant": {
+    "title": "Participantes",
+    "addPlaceholder": "Adicionar participante...",
+    "empty": "Nenhum participante ainda. Adicione alguém para começar.",
+    "removeTitle": "Remover participante?",
+    "removeDescription": "Isso removerá {{name}} e todas as despesas associadas. Esta ação não pode ser desfeita."
+  },
+  "expense": {
+    "title": "Despesas",
+    "empty": "Nenhuma despesa ainda. Adicione uma para começar a rastrear.",
+    "addTitle": "Adicionar Despesa",
+    "editTitle": "Editar Despesa",
+    "addDescription": "Digite os detalhes da despesa.",
+    "editDescription": "Atualize os detalhes da despesa.",
+    "description": "Descrição",
+    "descriptionPlaceholder": "ex: Jantar no restaurante",
+    "amount": "Valor",
+    "paidBy": "Pago por",
+    "selectWhoPaid": "Selecione quem pagou",
+    "date": "Data",
+    "splitBetween": "Dividir entre",
+    "addButton": "Adicionar Despesa",
+    "saveButton": "Salvar alterações",
+    "deleteTitle": "Excluir despesa?",
+    "deleteDescription": "Isso excluirá permanentemente \"{{name}}\". Esta ação não pode ser desfeita.",
+    "paidByInfo": "Pago por {{name}} \u2022 {{date}}"
+  },
+  "balance": {
+    "title": "Balanço",
+    "emptyParticipants": "Adicione participantes para ver o balanço.",
+    "totalExpenses": "Total de Despesas",
+    "individualBalances": "Balanços Individuais",
+    "settleUp": "Acertar Contas",
+    "addExpensesToSee": "Adicione despesas para ver quem deve a quem.",
+    "allSettled": "Tudo acertado! Nenhuma transferência necessária."
+  }
+}

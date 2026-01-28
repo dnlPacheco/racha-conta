@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -6,18 +7,34 @@ import { formatCurrency } from '@/lib/format'
 import { calculateBalances, simplifyDebts, getTotalExpenses } from '@/lib/balance'
 import type { Expense, Participant } from '@/types'
 
+function useStrings() {
+  const { t } = useTranslation()
+
+  return {
+    title: t('balance.title'),
+    emptyParticipants: t('balance.emptyParticipants'),
+    totalExpenses: t('balance.totalExpenses'),
+    individualBalances: t('balance.individualBalances'),
+    settleUp: t('balance.settleUp'),
+    addExpensesToSee: t('balance.addExpensesToSee'),
+    allSettled: t('balance.allSettled'),
+    unknown: t('common.labels.unknown'),
+  }
+}
+
 interface BalanceViewProps {
   expenses: Expense[]
   participants: Participant[]
 }
 
 export function BalanceView({ expenses, participants }: BalanceViewProps) {
+  const Strings = useStrings()
   const balances = calculateBalances(expenses, participants)
   const transfers = simplifyDebts(balances)
   const totalExpenses = getTotalExpenses(expenses)
 
   const getParticipantName = (id: string) => {
-    return participants.find((p) => p.id === id)?.name || 'Unknown'
+    return participants.find((p) => p.id === id)?.name || Strings.unknown
   }
 
   const getBalanceForParticipant = (id: string) => {
@@ -28,11 +45,11 @@ export function BalanceView({ expenses, participants }: BalanceViewProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Balance</CardTitle>
+          <CardTitle className="text-lg">{Strings.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground text-center py-4">
-            Add participants to see the balance.
+            {Strings.emptyParticipants}
           </p>
         </CardContent>
       </Card>
@@ -42,18 +59,18 @@ export function BalanceView({ expenses, participants }: BalanceViewProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Balance</CardTitle>
+        <CardTitle className="text-lg">{Strings.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Total */}
         <div className="text-center p-4 bg-muted/50 rounded-lg">
-          <p className="text-sm text-muted-foreground">Total Expenses</p>
+          <p className="text-sm text-muted-foreground">{Strings.totalExpenses}</p>
           <p className="text-2xl font-bold">{formatCurrency(totalExpenses)}</p>
         </div>
 
         {/* Individual Balances */}
         <div>
-          <h4 className="font-medium mb-3">Individual Balances</h4>
+          <h4 className="font-medium mb-3">{Strings.individualBalances}</h4>
           <ul className="space-y-2">
             {participants.map((participant) => {
               const balance = getBalanceForParticipant(participant.id)
@@ -91,12 +108,10 @@ export function BalanceView({ expenses, participants }: BalanceViewProps) {
 
         {/* Suggested Transfers */}
         <div>
-          <h4 className="font-medium mb-3">Settle Up</h4>
+          <h4 className="font-medium mb-3">{Strings.settleUp}</h4>
           {transfers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              {expenses.length === 0
-                ? 'Add expenses to see who owes whom.'
-                : 'All settled! No transfers needed.'}
+              {expenses.length === 0 ? Strings.addExpensesToSee : Strings.allSettled}
             </p>
           ) : (
             <ul className="space-y-2">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,10 +18,31 @@ import { ParticipantList } from '@/components/ParticipantList'
 import { ExpenseList } from '@/components/ExpenseList'
 import { ExpenseForm } from '@/components/ExpenseForm'
 import { BalanceView } from '@/components/BalanceView'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { useGroups } from '@/hooks/useGroups'
 import type { Expense } from '@/types'
 
+function useStrings() {
+  const { t } = useTranslation()
+
+  return {
+    notFound: t('group.notFound'),
+    backToHome: t('group.backToHome'),
+    back: t('common.buttons.back'),
+    deleteGroup: t('group.deleteGroup'),
+    deleteGroupTitle: t('group.deleteGroupTitle'),
+    cancel: t('common.buttons.cancel'),
+    delete: t('common.buttons.delete'),
+    addExpense: t('group.addExpense'),
+    expenseTitle: t('expense.title'),
+    deleteGroupDescription: (name: string) => t('group.deleteGroupDescription', { name }),
+    stats: (participants: number, expenses: number) =>
+      t('group.stats', { participants, expenses }),
+  }
+}
+
 export function GroupDetails() {
+  const Strings = useStrings()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const {
@@ -43,11 +65,11 @@ export function GroupDetails() {
       <div className="min-h-screen bg-background">
         <div className="container mx-auto py-8 px-4">
           <div className="text-center py-12">
-            <h1 className="text-2xl font-bold mb-4">Group not found</h1>
+            <h1 className="text-2xl font-bold mb-4">{Strings.notFound}</h1>
             <Link to="/">
               <Button>
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
+                {Strings.backToHome}
               </Button>
             </Link>
           </div>
@@ -97,43 +119,43 @@ export function GroupDetails() {
       <div className="container mx-auto py-8 px-4">
         {/* Header */}
         <header className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center justify-between mb-4">
             <Link to="/">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                {Strings.back}
               </Button>
             </Link>
+            <LanguageSwitcher />
           </div>
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold">{group.name}</h1>
               <p className="text-muted-foreground mt-1">
-                {group.participants.length} participants • {group.expenses.length} expenses
+                {Strings.stats(group.participants.length, group.expenses.length)}
               </p>
             </div>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="outline" size="sm" className="text-destructive">
                   <Trash2 className="w-4 h-4 mr-2" />
-                  Delete Group
+                  {Strings.deleteGroup}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Delete group?</AlertDialogTitle>
+                  <AlertDialogTitle>{Strings.deleteGroupTitle}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete "{group.name}" and all its data.
-                    This action cannot be undone.
+                    {Strings.deleteGroupDescription(group.name)}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>{Strings.cancel}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDeleteGroup}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Delete
+                    {Strings.delete}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -155,14 +177,14 @@ export function GroupDetails() {
           {/* Middle Column - Expenses */}
           <div className="lg:col-span-1">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold sr-only">Expenses</h2>
+              <h2 className="text-lg font-semibold sr-only">{Strings.expenseTitle}</h2>
               <Button
                 onClick={handleOpenExpenseForm}
                 disabled={group.participants.length === 0}
                 className="w-full lg:w-auto"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add Expense
+                {Strings.addExpense}
               </Button>
             </div>
             <ExpenseList

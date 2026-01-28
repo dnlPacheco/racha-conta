@@ -8,6 +8,7 @@ Specialized agent for frontend development following the project's established p
 - Vite as build tool
 - Tailwind CSS for styling
 - shadcn/ui components (built on Radix UI)
+- react-i18next for internationalization
 
 ---
 
@@ -19,6 +20,12 @@ src/
 │   ├── ui/              # shadcn/ui components
 │   └── [feature]/       # Feature-specific components
 ├── hooks/               # Custom React hooks
+├── i18n/                # Internationalization
+│   ├── index.ts         # i18n configuration
+│   └── locales/         # Translation files
+│       ├── en/          # English translations
+│       ├── pt-BR/       # Portuguese (Brazil) translations
+│       └── es/          # Spanish translations
 ├── lib/                 # Utility functions
 │   └── utils.ts         # cn() and other helpers
 ├── types/               # TypeScript type definitions
@@ -376,4 +383,195 @@ const GroupDetails = lazy(() => import('./pages/GroupDetails'))
 // Form labels
 <Label htmlFor="description">Description</Label>
 <Input id="description" />
+```
+
+---
+
+## Internationalization (i18n)
+
+The app uses `react-i18next` for internationalization with support for English, Portuguese (BR), and Spanish.
+
+### Supported Languages
+
+| Code | Language | Currency | Locale |
+|------|----------|----------|--------|
+| `en` | English | USD | en-US |
+| `pt-BR` | Portuguese (Brazil) | BRL | pt-BR |
+| `es` | Spanish | EUR | es-ES |
+
+### Translation Key Convention
+
+Use namespaced keys following the pattern `{namespace}.{section}.{element}`:
+
+- `app.*` - App name and tagline
+- `common.buttons.*` - Shared buttons (Create, Cancel, Delete, etc.)
+- `common.labels.*` - Shared labels
+- `home.*` - Home page strings
+- `group.*` - Group details page strings
+- `participant.*` - Participant-related strings
+- `expense.*` - Expense-related strings
+- `balance.*` - Balance view strings
+
+### Using Translations in Components (Strings Pattern)
+
+To keep components clean and avoid cluttering JSX with `t()` calls, create a local `useStrings()` hook that returns all translations for that component:
+
+```tsx
+import { useTranslation } from 'react-i18next'
+
+// Define all strings for this component in a local hook
+function useStrings() {
+  const { t } = useTranslation()
+
+  return {
+    title: t('home.title'),
+    description: t('home.description'),
+    createButton: t('common.buttons.create'),
+    // For translations with interpolation, use functions
+    participants: (count: number) => t('home.participants', { count }),
+    welcomeMessage: (name: string) => t('home.welcome', { name }),
+  }
+}
+
+export function MyComponent() {
+  const Strings = useStrings()
+
+  return (
+    <div>
+      <h1>{Strings.title}</h1>
+      <p>{Strings.description}</p>
+      <p>{Strings.participants(3)}</p>
+      <p>{Strings.welcomeMessage('John')}</p>
+      <button>{Strings.createButton}</button>
+    </div>
+  )
+}
+```
+
+**Benefits of this pattern:**
+- Cleaner JSX without `t()` calls scattered throughout
+- All translations for a component are defined in one place
+- Easy to see which translations a component uses
+- Type-safe function calls for interpolated strings
+```
+
+### Pluralization
+
+Use `_one` and `_other` suffixes for pluralization:
+
+```json
+{
+  "home": {
+    "participants_one": "{{count}} participant",
+    "participants_other": "{{count}} participants"
+  }
+}
+```
+
+```tsx
+t('home.participants', { count: 1 })  // "1 participant"
+t('home.participants', { count: 5 })  // "5 participants"
+```
+
+### Interpolation
+
+Use `{{variable}}` for dynamic values:
+
+```json
+{
+  "expense": {
+    "paidByInfo": "Paid by {{name}} • {{date}}"
+  }
+}
+```
+
+```tsx
+t('expense.paidByInfo', { name: 'John', date: '01/15/2024' })
+```
+
+### Adding New Translations
+
+1. Add the key to all three translation files:
+   - `src/i18n/locales/en/translation.json`
+   - `src/i18n/locales/pt-BR/translation.json`
+   - `src/i18n/locales/es/translation.json`
+
+2. Follow the existing key naming convention
+
+3. Use the `t()` function to access the translation
+
+### Currency and Date Formatting
+
+Currency and date formatting automatically adapts to the current language. Use the format utilities from `@/lib/format`:
+
+```tsx
+import { formatCurrency, formatDate } from '@/lib/format'
+
+// Automatically uses the current i18n locale
+formatCurrency(100)  // "$100.00" (en) | "R$ 100,00" (pt-BR) | "100,00 €" (es)
+formatDate(new Date())  // "01/15/2024" (en) | "15/01/2024" (pt-BR) | "15/01/2024" (es)
+```
+
+### Language Switcher
+
+The `LanguageSwitcher` component is available for users to change the language. It persists the selection in localStorage.
+
+```tsx
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+
+// Add to header
+<header>
+  <h1>{t('app.name')}</h1>
+  <LanguageSwitcher />
+</header>
+```
+
+### useLanguage Hook
+
+For programmatic language control (used by LanguageSwitcher):
+
+```tsx
+import { useLanguage } from '@/hooks/useLanguage'
+
+function MyComponent() {
+  const { currentLanguage, changeLanguage, supportedLanguages } = useLanguage()
+
+  return (
+    <select
+      value={currentLanguage}
+      onChange={(e) => changeLanguage(e.target.value)}
+    >
+      {supportedLanguages.map((lang) => (
+        <option key={lang.code} value={lang.code}>
+          {lang.name}
+        </option>
+      ))}
+    </select>
+  )
+}
+```
+
+### Component Strings Pattern Summary
+
+Every component that uses translations should follow this pattern:
+
+1. Create a local `useStrings()` hook at the top of the file
+2. Define all translations as properties of the returned object
+3. Use functions for translations that need interpolation
+4. Use `const Strings = useStrings()` in the component
+5. Access translations via `Strings.propertyName`
+
+```tsx
+// Pattern template
+function useStrings() {
+  const { t } = useTranslation()
+  return {
+    // Static strings
+    staticText: t('namespace.key'),
+    // Dynamic strings (with interpolation)
+    dynamicText: (param: string) => t('namespace.key', { param }),
+    // Pluralized strings
+    itemCount: (count: number) => t('namespace.items', { count }),
+  }
+}
 ```
